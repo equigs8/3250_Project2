@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 
 
     public float walkSpeed = 5.0f;
+    public float runSpeed = 10.0f;
+    private float speed;
     public float mouseSensitivity = 2.0f;
     public CharacterController controller;
     public GameObject Camera;
@@ -38,8 +40,18 @@ public class PlayerController : MonoBehaviour
     {
         float verInput = Input.GetAxis("Vertical");
         float horInput = Input.GetAxis("Horizontal");
-        float verSpeed = verInput * walkSpeed;
-        float horSpeed = horInput * walkSpeed;
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            speed = runSpeed;
+        }
+        else
+        {
+            speed = walkSpeed;
+        }
+
+        float verSpeed = verInput * speed;
+        float horSpeed = horInput * speed;
 
         Vector3 horizontalMovement = new Vector3(horSpeed, 0, verSpeed);
         horizontalMovement = transform.TransformDirection(horizontalMovement);
