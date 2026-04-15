@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour {
 		//Grab the game mode service, we need it to access the player character!
 		var gameModeService = ServiceLocator.Current.Get<IGameModeService>();
 		//Ignore the main player character's collision. A little hacky, but it should work.
-		Physics.IgnoreCollision(gameModeService.GetPlayerCharacter().GetComponent<Collider>(), GetComponent<Collider>());
+		//Physics.IgnoreCollision(gameModeService.GetPlayerCharacter().GetComponent<Collider>(), GetComponent<Collider>());
 		
 		//Start destroy timer
 		StartCoroutine (DestroyAfter ());
@@ -36,6 +36,7 @@ public class Projectile : MonoBehaviour {
 	//If the bullet collides with anything
 	private void OnCollisionEnter (Collision collision)
 	{
+		Debug.Log ("Collision " + collision.gameObject.name);
 		//Ignore collisions with other projectiles.
 		if (collision.gameObject.GetComponent<Projectile>() != null)
 			return;
@@ -83,6 +84,7 @@ public class Projectile : MonoBehaviour {
 		}
 		if (collision.transform.tag == "Player") 
 		{
+			Debug.Log("Collides with player");
 			Health health = collision.gameObject.GetComponent<Health>();
 			if (health != null)
 			{

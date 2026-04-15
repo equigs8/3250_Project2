@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "IA_Player",
     "maps": [
         {
@@ -36,7 +37,7 @@
                     "name": "Aim",
                     "type": "Button",
                     "id": "a9c8dffd-02dc-46bc-aa77-d0e60902e6e5",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
@@ -170,6 +171,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "beb3e592-acba-41b2-9e1f-40281a74db5d",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

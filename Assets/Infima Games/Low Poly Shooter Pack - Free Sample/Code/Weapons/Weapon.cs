@@ -13,6 +13,7 @@ namespace InfimaGames.LowPolyShooterPack
         #region FIELDS SERIALIZED
         [Header("General")]
         public bool isEnemy;
+        public GameObject enemyDirection;
         [Header("Firing")]
 
         [Tooltip("Is this weapon automatic? If yes, then holding down the firing button will continuously fire.")]
@@ -212,13 +213,14 @@ namespace InfimaGames.LowPolyShooterPack
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
+            //Debug.Log("Firing");
             //We need a muzzle in order to fire this weapon!
             if (muzzleBehaviour == null)
                 return;
             
             //Make sure that we have a camera cached, otherwise we don't really have the ability to perform traces.
-            if (playerCamera == null)
-                return;
+            // if (playerCamera == null)
+            //     return;
 
             //Get Muzzle Socket. This is the point we fire from.
             Transform muzzleSocket = muzzleBehaviour.GetSocket();
@@ -234,15 +236,20 @@ namespace InfimaGames.LowPolyShooterPack
             
 
             Vector3 shootOrigin = playerCamera != null ? playerCamera.position : muzzleSocket.position;
-            Vector3 shootDirection = playerCamera != null ? playerCamera.forward : transform.up;
+            Vector3 shootDirection = playerCamera != null ? playerCamera.forward : transform.forward;
 
             if(playerCamera == null)
             {
-                shootDirection = -transform.up;
+                shootDirection = transform.forward;
+                shootDirection = new Vector3(shootDirection.x + Random.Range(-1 * spreadMultiplier, spreadMultiplier), shootDirection.y + Random.Range(-1 * spreadMultiplier, spreadMultiplier), shootDirection.z + Random.Range(-1 * spreadMultiplier, spreadMultiplier));
             }
+            //Debug.Log("Shoot Direction: " + shootDirection);
             //Determine the rotation that we want to shoot our projectile in.
             //Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000.0f - muzzleSocket.position);
+            //Debug.Log("Current Rotation: " + transform.rotation);
             Quaternion rotation = Quaternion.LookRotation(shootDirection);
+            // Debug.Log("New Rotation: " + rotation);
+            // Debug.Log("Rotation: " + transform.rotation);
 
 
             //If there's something blocking, then we can aim directly at that thing, which will result in more accurate shooting.
@@ -254,6 +261,7 @@ namespace InfimaGames.LowPolyShooterPack
             GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation);
             //Add velocity to the projectile.
             projectile.GetComponent<Rigidbody>().linearVelocity = projectile.transform.forward * projectileImpulse;   
+            Debug.Log("Projectile " + projectile);
         }
 
         public override void FillAmmunition(int amount)

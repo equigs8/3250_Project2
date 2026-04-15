@@ -39,6 +39,7 @@ public class EnemyAI : MonoBehaviour
             {
                 if (activeWeapon != null)
                 {
+                    
                     // Use the Fire method from Weapon.cs
                     activeWeapon.Fire(accuracyOffset);
                     
