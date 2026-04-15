@@ -1,5 +1,6 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
+
 using UnityEngine;
 
 namespace InfimaGames.LowPolyShooterPack
@@ -10,7 +11,8 @@ namespace InfimaGames.LowPolyShooterPack
     public class Weapon : WeaponBehaviour
     {
         #region FIELDS SERIALIZED
-        
+        [Header("General")]
+        public bool isEnemy;
         [Header("Firing")]
 
         [Tooltip("Is this weapon automatic? If yes, then holding down the firing button will continuously fire.")]
@@ -142,9 +144,16 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache the game mode service. We only need this right here, but we'll cache it in case we ever need it again.
             gameModeService = ServiceLocator.Current.Get<IGameModeService>();
             //Cache the player character.
-            characterBehaviour = gameModeService.GetPlayerCharacter();
-            //Cache the world camera. We use this in line traces.
-            playerCamera = characterBehaviour.GetCameraWorld().transform;
+            if (!isEnemy)
+            {
+                characterBehaviour = gameModeService.GetPlayerCharacter();
+            }
+            if(characterBehaviour != null)
+            {
+                //Cache the player character's camera.
+                playerCamera = characterBehaviour.GetCameraWorld().transform;
+            }
+            
         }
         protected override void Start()
         {
@@ -223,11 +232,21 @@ namespace InfimaGames.LowPolyShooterPack
             //Play all muzzle effects.
             muzzleBehaviour.Effect();
             
+
+            Vector3 shootOrigin = playerCamera != null ? playerCamera.position : muzzleSocket.position;
+            Vector3 shootDirection = playerCamera != null ? playerCamera.forward : transform.up;
+
+            if(playerCamera == null)
+            {
+                shootDirection = -transform.up;
+            }
             //Determine the rotation that we want to shoot our projectile in.
-            Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000.0f - muzzleSocket.position);
-            
+            //Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000.0f - muzzleSocket.position);
+            Quaternion rotation = Quaternion.LookRotation(shootDirection);
+
+
             //If there's something blocking, then we can aim directly at that thing, which will result in more accurate shooting.
-            if (Physics.Raycast(new Ray(playerCamera.position, playerCamera.forward),
+            if (Physics.Raycast(new Ray(shootOrigin, shootDirection),
                 out RaycastHit hit, maximumDistance, mask))
                 rotation = Quaternion.LookRotation(hit.point - muzzleSocket.position);
                 

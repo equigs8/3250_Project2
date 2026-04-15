@@ -69,6 +69,25 @@ public class Projectile : MonoBehaviour {
 		//If bullet collides with "Blood" tag
 		if (collision.transform.tag == "Blood") 
 		{
+			Health health = collision.gameObject.GetComponent<Health>();
+			if (health != null)
+			{
+				health.TakeDamage(10f);
+			}
+			//Instantiate random impact prefab from array
+			Instantiate (bloodImpactPrefabs [Random.Range 
+				(0, bloodImpactPrefabs.Length)], transform.position, 
+				Quaternion.LookRotation (collision.contacts [0].normal));
+			//Destroy bullet object
+			Destroy(gameObject);
+		}
+		if (collision.transform.tag == "Player") 
+		{
+			Health health = collision.gameObject.GetComponent<Health>();
+			if (health != null)
+			{
+				health.TakeDamage(10f);
+			}
 			//Instantiate random impact prefab from array
 			Instantiate (bloodImpactPrefabs [Random.Range 
 				(0, bloodImpactPrefabs.Length)], transform.position, 
