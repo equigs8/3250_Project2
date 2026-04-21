@@ -82,6 +82,52 @@ public class Projectile : MonoBehaviour {
 			//Destroy bullet object
 			Destroy(gameObject);
 		}
+		if(collision.transform.tag == "Hitbox Chest")
+		{
+			Debug.Log("Collides with chest");
+
+			Health health = collision.gameObject.GetComponentInParent<Health>();
+			if (health != null)
+			{
+				health.TakeDamageTo(5f, "Chest");
+			}
+			//Instantiate random impact prefab from array
+			Instantiate (bloodImpactPrefabs [Random.Range 
+				(0, bloodImpactPrefabs.Length)], transform.position, 
+				Quaternion.LookRotation (collision.contacts [0].normal));
+			//Destroy bullet object
+			Destroy(gameObject);
+		}else if(collision.transform.tag == "Hitbox Head")
+		{
+			Debug.Log("Collides with head");
+
+			Health health = collision.gameObject.GetComponentInParent<Health>();
+			if (health != null)
+			{
+				health.TakeDamageTo(19f, "Head");
+			}
+			//Instantiate random impact prefab from array
+			Instantiate (bloodImpactPrefabs [Random.Range 
+				(0, bloodImpactPrefabs.Length)], transform.position, 
+				Quaternion.LookRotation (collision.contacts [0].normal));
+			//Destroy bullet object
+			Destroy(gameObject);
+		}else if(collision.transform.tag == "Hitbox Arm")
+		{
+			Debug.Log("Collides with Arm");
+
+			Health health = collision.gameObject.GetComponentInParent<Health>();
+			if (health != null)
+			{
+				health.TakeDamageTo(5f, "Arm");
+			}
+			//Instantiate random impact prefab from array
+			Instantiate (bloodImpactPrefabs [Random.Range 
+				(0, bloodImpactPrefabs.Length)], transform.position, 
+				Quaternion.LookRotation (collision.contacts [0].normal));
+			//Destroy bullet object
+			Destroy(gameObject);
+		}
 		if (collision.transform.tag == "Player") 
 		{
 			Debug.Log("Collides with player");

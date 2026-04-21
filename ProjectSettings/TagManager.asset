@@ -16,6 +16,10 @@ TagManager:
   - Wood (Static)
   - Dirt (Static)
   - Wood
+  - Hitbox Arm
+  - Hitbox Leg
+  - Hitbox Chest
+  - Hitbox Head
   layers:
   - Default
   - TransparentFX
