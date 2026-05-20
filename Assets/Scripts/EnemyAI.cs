@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using InfimaGames.LowPolyShooterPack;
+using UnityEngine.Animations.Rigging;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : MonoBehaviour
@@ -47,6 +48,8 @@ public class EnemyAI : MonoBehaviour
     private float strafeTimer;
     
     private float currentIKWeight = 0f;
+    [Header("Animation Rigging")]
+    public Rig aimingRig;
 
     void Start()
     {
@@ -322,6 +325,47 @@ public class EnemyAI : MonoBehaviour
                 chest.rotation = Quaternion.Slerp(chest.rotation, correctiveRotation * chest.rotation, currentIKWeight);
             }
         }
+    }
+    public void Die()
+    {
+        if (currentState == AIState.Dead) return;
+        SwitchState(AIState.Dead);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddKill();
+        }
+
+        // 1. Stop the navigation agent completely
+        if (agent.isActiveAndEnabled)
+        {
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
+
+        // 2. Play the animation
+        animator.SetTrigger("Die");
+
+        // 3. Snap IK and Rigging weights to 0 so the corpse doesn't contort
+        currentIKWeight = 0f;
+        
+        // --- NEW: Turn off the Animation Rigging package completely ---
+        if (aimingRig != null)
+        {
+            aimingRig.weight = 0f; 
+        }
+
+        // 4. Turn off the Aiming Avatar Mask Layer (if you made one)
+        if (animator.layerCount > 1)
+        {
+            animator.SetLayerWeight(1, 0f); 
+        }
+
+        if(GetComponent<EnemyAimTracker>()) Destroy(GetComponent<EnemyAimTracker>());
+
+        // 5. Disable the main collider 
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
     }
 
     private void OnDrawGizmos()

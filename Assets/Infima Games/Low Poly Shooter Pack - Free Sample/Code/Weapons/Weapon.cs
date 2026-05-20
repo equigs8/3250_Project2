@@ -236,12 +236,17 @@ namespace InfimaGames.LowPolyShooterPack
             
 
             Vector3 shootOrigin = playerCamera != null ? playerCamera.position : muzzleSocket.position;
-            Vector3 shootDirection = playerCamera != null ? playerCamera.forward : transform.forward;
+
+            
+            Vector3 shootDirection = playerCamera != null ? playerCamera.forward : muzzleSocket.forward;
 
             if(playerCamera == null)
             {
-                shootDirection = transform.forward;
-                shootDirection = new Vector3(shootDirection.x + Random.Range(-1 * spreadMultiplier, spreadMultiplier), shootDirection.y + Random.Range(-1 * spreadMultiplier, spreadMultiplier), shootDirection.z + Random.Range(-1 * spreadMultiplier, spreadMultiplier));
+                // Apply enemy weapon spread to the muzzle's forward direction
+                shootDirection = new Vector3(
+                    shootDirection.x + Random.Range(-1 * spreadMultiplier, spreadMultiplier), 
+                    shootDirection.y + Random.Range(-1 * spreadMultiplier, spreadMultiplier), 
+                    shootDirection.z + Random.Range(-1 * spreadMultiplier, spreadMultiplier));
             }
             //Debug.Log("Shoot Direction: " + shootDirection);
             //Determine the rotation that we want to shoot our projectile in.

@@ -27,6 +27,7 @@ public class ExplosiveBarrelScript : MonoBehaviour {
 	public float explosionRadius = 12.5f;
 	//How powerful the explosion is
 	public float explosionForce = 4000.0f;
+	public float baseDamage = 5f;
 	
 	private void Update () {
 		//Generate random time based on min and max time values
@@ -58,6 +59,12 @@ public class ExplosiveBarrelScript : MonoBehaviour {
 		foreach (Collider hit in colliders) {
 			Rigidbody rb = hit.GetComponent<Rigidbody> ();
 			
+			if(hit.name == "Enemy")
+			{
+				Debug.Log("HIT ENEMY");
+				Debug.Log(hit.transform.tag);
+			}
+			
 			//Add force to nearby rigidbodies
 			if (rb != null)
 				rb.AddExplosionForce (explosionForce * 50, explosionPos, explosionRadius);
@@ -83,6 +90,20 @@ public class ExplosiveBarrelScript : MonoBehaviour {
 				hit.gameObject.GetComponent<GasTankScript> ().isHit = true;
 				hit.gameObject.GetComponent<GasTankScript> ().explosionTimer = 0.05f;
 			}
+			if(hit.GetComponent<Collider>().tag == "Player")
+			{
+				//If player or enemy is within radius, they take damage based on distance from.
+				hit.gameObject.GetComponent<Health>().TakeDamage(hit.transform.position.magnitude * baseDamage);
+				Debug.Log("Damage: " + hit.transform.position.magnitude * baseDamage);
+				
+			}
+			if(hit.GetComponent<Collider>().tag == "Blood")
+			{
+				Debug.Log("Hit: " + hit.name);
+				//If player or enemy is within radius, they take damage based on distance from.
+				hit.gameObject.GetComponent<Health>().TakeDamage(hit.transform.position.magnitude * baseDamage);
+				Debug.Log("Damage: " + hit.transform.position.magnitude * baseDamage);
+			}
 		}
 
 		//Raycast downwards to check the ground tag
@@ -97,4 +118,11 @@ public class ExplosiveBarrelScript : MonoBehaviour {
 		//Destroy the current barrel object
 		Destroy (gameObject);
 	}
+
+    void OnDrawGizmos()
+    {
+        // explosion radius
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, explosionRadius);
+    }
 }

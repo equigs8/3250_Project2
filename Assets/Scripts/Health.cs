@@ -79,6 +79,14 @@ public class Health : MonoBehaviour
         onDeath?.Invoke();
         // For basic enemies, just destroy the object. 
         // For the player, trigger a game over screen.
-        Destroy(gameObject); 
+
+    }
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+    public float GetMaxHealth()
+    {
+        return maxHealth;
     }
 }

@@ -178,7 +178,8 @@ namespace InfimaGames.LowPolyShooterPack
             #endregion
             
             //Update Velocity.
-            Velocity = new Vector3(movement.x, 0.0f, movement.z);
+            //Velocity = new Vector3(movement.x, 0.0f, movement.z);
+            Velocity = new Vector3(movement.x, Velocity.y, movement.z);
         }
 
         /// <summary>
